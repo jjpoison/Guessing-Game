@@ -1,9 +1,8 @@
-import os
 import json
 import random
 from pathlib import Path
 
-print("««« Number Guessing »»»")
+print("\n««« Number Guessing »»»")
 
 # load highscores from file or create new if missing
 SCORES_FILE = Path(__file__).parent/ "highscores.json"
@@ -12,7 +11,7 @@ if SCORES_FILE.exists():
     with open(SCORES_FILE, "r") as f:
         highscores = json.load(f)
 else:
-    highscores = {"easy": None, "medium": None, "hard": None}
+    highscores = {"easy": None, "medium": None, "hard": None, "extreme": None}
     with open(SCORES_FILE, "w") as f:
         json.dump(highscores, f, indent=4)
 
@@ -22,22 +21,24 @@ def play_game():
     is_running = True
     while is_running:
         lowest_num = 1
-        difficulty = input("Select the dificulty (easy/medium/hard): ").lower()
+        difficulty = input("Select the dificulty (easy/medium/hard/extreme): ").lower()
         if difficulty == "easy":
             highest_num = 10
         elif difficulty == "medium":
             highest_num = 50
         elif difficulty == "hard":
             highest_num = 100
+        elif difficulty == "extreme":
+            highest_num = 1000
         else:
             print("Invalid input. Defaulting to easy.")
-            difficulty == "easy"
+            difficulty = "easy"
             highest_num = 10
 
         answer = random.randint(lowest_num, highest_num)
         guesses = 0
 
-        print("Select a number between", lowest_num, "and", highest_num)
+        print(" >>> Select a number between", lowest_num, "and", highest_num)
 
         while True:
             guess = int(input("Enter your guess: "))    
@@ -53,17 +54,17 @@ def play_game():
                 print("Too high! Try again.")
             else: # correct answer
                 print("You got it! The answer was", answer)
-                print("You guessed", guesses, "times.")
+                print("~ You guessed", guesses, "times.")
 
                 # highscore updater
                 if highscores[difficulty] is None: # no highscore yet
                     highscores[difficulty] = guesses
-                    print("First highscore for", difficulty, "mode:", guesses, "guesses.")
+                    print("~ First highscore for", difficulty, "mode:", guesses, "guesses.")
                 elif guesses < highscores[difficulty]: # beat the highscore
                     highscores[difficulty] = guesses
-                    print("New highscore for", difficulty, "mode:", guesses, "guesses!")
+                    print("~ New highscore for", difficulty, "mode:", guesses, "guesses!")
                 else:
-                    print("Highscore for", difficulty, "is still", highscores[difficulty], "guesses.")
+                    print("~ Highscore for", difficulty, "is still", highscores[difficulty], "guesses.")
 
                 # save highscores to json file
                 with open(SCORES_FILE, "w") as f:
@@ -79,7 +80,7 @@ def play_game():
 
 def show_highscores():
     print("\n=== Highscores ===")
-    for diff in ["easy", "medium", "hard"]:
+    for diff in ["easy", "medium", "hard", "extreme"]:
         score = highscores[diff]
         if score is None:
             print(f"{diff.title()}: None")
@@ -107,3 +108,5 @@ def main_menu():
 
 if __name__ == "__main__":
     main_menu()
+
+# Leaderboards
