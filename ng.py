@@ -20,8 +20,8 @@ if SCORES_FILE.exists():
 
 else:
     highscores = {diff: [] for diff in difficulties}
-    with open(SCORES_FILE, "w") as f:
-        json.dump(highscores, f, indent=4)
+    #with open(SCORES_FILE, "w") as f:
+    #    json.dump(highscores, f, indent=4)
 
 def choose_custom_range():
     while True:
@@ -66,6 +66,7 @@ def play_game():
 
     is_running = True
     while is_running:
+        os.system("cls")
         lowest_num = 1
         result = choose_difficulty()
 
@@ -84,7 +85,7 @@ def play_game():
             try:
                 guess = int(input("Enter your guess: "))
             except ValueError:
-                print("Please enter a valid number.")  
+                print("Please enter a valid number.")
                 continue
 
             guesses += 1
@@ -130,9 +131,11 @@ def play_game():
         if again != "y":
             is_running = False
             print("Okay. Thanks for playing!")
+            os.system("cls")
             break
 
 def show_highscores():
+    os.system("cls")
     print("\n=== Highscores ===")
     for diff in difficulties:
         if highscores[diff]:
@@ -143,6 +146,7 @@ def show_highscores():
     print("===================")
 
 def show_leaderboard():
+    os.system("cls")
     print("\n=== Leaderboard (Best Player Per Difficulty) ===")
     for diff in difficulties:
         if diff == "custom":
@@ -159,14 +163,31 @@ def show_leaderboard():
                     seen_guesses.add(entry["guesses"])
     print("\n================================================")
 
+def clear_game_data():
+    comfirm = input("Reset all of your highscores? (y/n): ").strip().lower()
+    if comfirm == "y":
+        if SCORES_FILE.exists():
+            os.remove(SCORES_FILE)
+
+            for diff in difficulties:
+                highscores[diff].clear()
+            print("All game data cleared! Highscores reset.")
+        else:
+            print("No saved highscores found.")
+    elif comfirm == "n":
+        print("Highscores still saved.")
+    else:
+        print("Invalid input.")
+
 def main_menu():
     while True:
         print("\n=== Main Menu ===")
         print("1. Play Game")
         print("2. View Highscores")
         print("3. View Leaderboards")
-        print("4. Exit")
-        choice = input("Choose an option (1-4): ")
+        print("4. Clear Game Data")
+        print("5. Exit")
+        choice = input("Choose an option (1-5): ")
 
         if choice == "1":
             play_game()
@@ -175,6 +196,8 @@ def main_menu():
         elif choice == "3":
             show_leaderboard()
         elif choice == "4":
+            clear_game_data()
+        elif choice == "5":
             print("Goodbye!")
             break
         else:
@@ -182,3 +205,7 @@ def main_menu():
 
 if __name__ == "__main__":
     main_menu()
+
+# Streaks
+# Timer (chosen)
+# Achievements !!!
